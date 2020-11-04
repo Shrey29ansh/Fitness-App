@@ -32,36 +32,25 @@ class _MyAppState extends State<MyApp> {
     return new Timer(_duration, navigationPage);
   }
 
-  void navigationPage() {
-    status
-        ? Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => FirstScreen()))
-        : Navigator.push(
-            context, new MaterialPageRoute(builder: (context) => LoginPage()));
-  }
-
-  void checkstatus() async {
-    // ignore: await_only_futures
-    final User currentUser = await _auth.currentUser;
+  void navigationPage() async {
+    final User currentUser = _auth.currentUser;
     print(currentUser);
 
     if (currentUser != null) {
       setState(() {
         imageUrl = currentUser.photoURL;
-        status = true;
       });
+      Navigator.pushReplacement(
+          context, new MaterialPageRoute(builder: (context) => FirstScreen()));
     } else {
-      setState(() {
-        status = false;
-      });
+      Navigator.pushReplacement(
+          context, new MaterialPageRoute(builder: (context) => LoginPage()));
     }
   }
 
   @override
   void initState() {
     super.initState();
-
-    this.checkstatus();
     this.startTime();
   }
 
